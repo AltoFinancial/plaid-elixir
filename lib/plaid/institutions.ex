@@ -123,14 +123,13 @@ defmodule Plaid.Institutions do
 
   Parameters
   ```
-  %{
-    institution_id: "ins_109512", options: %{ include_optional_metadata: true }
-  }
+  "ins_109512", %{ options: %{ include_optional_metadata: true } }
   ```
   """
-  @spec get_by_id(params, config | nil) ::
+  @spec get_by_id(String.t(), params, config | nil) ::
           {:ok, Plaid.Institutions.Institution.t()} | {:error, Plaid.Error.t()}
-  def get_by_id(params, config \\ %{}) do
+  def get_by_id(id, options \\ %{}, config \\ %{}) do
+    params = Map.merge(%{institution_id: id}, options)
     config = validate_public_key(config)
     endpoint = "#{@endpoint}/get_by_id"
 
