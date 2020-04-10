@@ -33,9 +33,17 @@ defmodule Plaid.InstitutionsTest do
         Plug.Conn.resp(conn, 200, Poison.encode!(body))
       end)
 
-      assert {:ok, resp} = Plaid.Institutions.get_by_id("ins_109512")
+      assert {:ok, resp} = Plaid.Institutions.get_by_id(%{institution_id: "ins_109512"})
       assert Plaid.Institutions.Institution == resp.__struct__
       assert {:ok, _} = Jason.encode(resp)
+
+      assert {:ok, resp_with_option} =
+               Plaid.Institutions.get_by_id(%{
+                 institution_id: "ins_109512",
+                 options: %{include_optional_metadata: true}
+               })
+
+      assert resp_with_option.logo
     end
 
     test "search/1 requests POST and returns Plaid.Institutions", %{bypass: bypass} do
