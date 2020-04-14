@@ -120,12 +120,17 @@ defmodule Plaid.Institutions do
 
   @doc """
   Gets an institution by id.
+
+  Parameters
+  ```
+  "ins_109512", %{ options: %{ include_optional_metadata: true } }
+  ```
   """
-  @spec get_by_id(String.t(), config | nil) ::
+  @spec get_by_id(String.t(), params, config | nil) ::
           {:ok, Plaid.Institutions.Institution.t()} | {:error, Plaid.Error.t()}
-  def get_by_id(id, config \\ %{}) do
+  def get_by_id(id, options \\ %{}, config \\ %{}) do
+    params = Map.merge(%{institution_id: id}, options)
     config = validate_public_key(config)
-    params = %{institution_id: id}
     endpoint = "#{@endpoint}/get_by_id"
 
     make_request_with_cred(:post, endpoint, config, params)
